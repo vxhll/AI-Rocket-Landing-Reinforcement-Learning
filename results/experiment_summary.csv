@@ -1,0 +1,4 @@
+Model,Training_Steps,Average_Reward,Average_Steps,Successful_Episodes
+Original_PPO,1000000,151.49,443.10,6
+Reward_Hacking_PPO,500000,2.70,980.50,Not_Recorded
+Improved_Reward_PPO,500000,27.48,396.10,2
