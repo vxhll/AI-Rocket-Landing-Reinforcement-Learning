@@ -1,243 +1,144 @@
-# 🚀 AI Rocket Landing | Reinforcement Learning
+# 🚀 AI Rocket Landing using Reinforcement Learning
 
-### Training an autonomous lunar lander using PPO, reward shaping & reward hacking experiments.
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.13-3776AB?style=for-the-badge&logo=python&logoColor=white" />
-  <img src="https://img.shields.io/badge/PyTorch-Deep%20Learning-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white" />
-  <img src="https://img.shields.io/badge/Algorithm-PPO-00A67E?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Gymnasium-LunarLander-blue?style=for-the-badge" />
-</p>
+<h3 align="center">Training an Intelligent Agent to Land a Lunar Spacecraft using PPO and Reward Shaping</h3>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Project-Reinforcement%20Learning-111827?style=flat-square" />
-  <img src="https://img.shields.io/badge/Experiments-3-16A34A?style=flat-square" />
-  <img src="https://img.shields.io/badge/Status-Completed-success?style=flat-square" />
+  <img src="https://img.shields.io/badge/Python-3.13-blue?logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/Reinforcement%20Learning-PPO-orange" alt="Reinforcement Learning">
+  <img src="https://img.shields.io/badge/Framework-Gymnasium-green" alt="Gymnasium">
+  <img src="https://img.shields.io/badge/Deep%20Learning-PyTorch-red?logo=pytorch&logoColor=white" alt="PyTorch">
+  <img src="https://img.shields.io/badge/Status-Completed-success" alt="Status">
 </p>
 
 ---
 
 ## 🌌 Overview
 
-Can an AI learn to land a rocket without being explicitly programmed how to fly?
+Can an AI agent learn to land a spacecraft safely without being explicitly programmed with landing instructions?
 
-This project explores autonomous rocket landing using **Reinforcement Learning (RL)**. An AI agent interacts with the Lunar Lander simulation, learns through trial and error, and improves its decision-making using rewards and penalties.
+This project explores that question using **Reinforcement Learning (RL)**. An intelligent agent is trained in the `LunarLander-v3` simulation environment using **Proximal Policy Optimization (PPO)**.
 
-Beyond training an autonomous agent, this project investigates a critical challenge in AI: **Reward Hacking** — when an agent discovers unintended ways to maximize its reward instead of achieving the actual objective.
+The project goes beyond basic model training by investigating how reward design influences agent behavior. Three experiments are conducted to understand baseline performance, reward hacking, and improved reward shaping.
 
-### 🎯 Project Highlights
+The central objective is to explore how an agent learns through trial and error, and why designing the right reward function is essential for reliable AI systems.
 
-- Autonomous rocket landing using PPO.
-- Random agent baseline implementation.
-- Neural network policy learning with PyTorch.
-- Custom reward shaping experiments.
-- Reward hacking demonstration.
-- Evaluation across multiple episodes.
-- Simulation recordings and performance visualization.
+## 🎯 Project Objectives
 
----
+- Develop an autonomous lunar landing agent using PPO.
+- Understand the interaction between an agent, environment, actions, and rewards.
+- Establish a baseline using the original environment reward.
+- Investigate unintended behavior through reward hacking.
+- Implement an improved reward-shaping strategy.
+- Evaluate and compare the performance of different reward functions.
 
-## 🛰️ Environment
+## 🧠 Environment: LunarLander-v3
 
-**Gymnasium – LunarLander-v3**
+Built using [Gymnasium](https://gymnasium.farama.org/), the simulation provides an environment where the agent must control a lunar lander and attempt a safe landing.
 
-The agent interacts with a physics-based environment and receives eight numerical observations at each timestep.
+| Component | Description |
+|---|---|
+| Environment | LunarLander-v3 |
+| Observation Space | 8-dimensional state vector |
+| Action Space | 4 discrete actions |
+| Algorithm | Proximal Policy Optimization (PPO) |
+| Policy | MLP Policy |
+| Framework | Stable-Baselines3 |
 
-| Observation | Description |
-|:---|:---|
-| X Position | Horizontal position |
-| Y Position | Vertical position |
-| X Velocity | Horizontal movement |
-| Y Velocity | Vertical movement |
-| Angle | Rocket orientation |
-| Angular Velocity | Rotation speed |
-| Left Leg Contact | Left landing leg status |
-| Right Leg Contact | Right landing leg status |
+**Available actions:**
 
-### 🎮 Action Space
+| Action | Description |
+|---|---|
+| 0 | Do nothing |
+| 1 | Fire left orientation engine |
+| 2 | Fire main engine |
+| 3 | Fire right orientation engine |
 
-| Action | Control |
-|:---:|:---|
-| 0 | Do Nothing |
-| 1 | Fire Left Engine |
-| 2 | Fire Main Engine |
-| 3 | Fire Right Engine |
+## ⚙️ Experiments
 
----
+### Experiment 1 — Baseline PPO
 
-## 🧠 Model Architecture
+The first agent was trained using the original LunarLander reward function.
 
-The project uses **Proximal Policy Optimization (PPO)**, a policy-gradient reinforcement learning algorithm.
-
-**Neural Network Architecture**
-
-```text
-        Environment
-             |
-             ▼
-    8 Numerical Observations
-             |
-             ▼
-      Input Layer (8)
-             |
-             ▼
-     Hidden Layer (64)
-             |
-             ▼
-     Hidden Layer (64)
-             |
-       ┌─────┴─────┐
-       ▼           ▼
-  Policy Network  Value Network
-       |           |
-       ▼           ▼
-  4 Actions    State Value
-       |
-       ▼
-   Rocket Control
-```
-
-### ⚙️ Training Configuration
-
-| Hyperparameter | Value |
-|:---|---:|
-| Algorithm | PPO |
-| Policy | MlpPolicy |
-| Learning Rate | 0.0003 |
-| Batch Size | 64 |
-| Rollout Steps | 2048 |
-| Epochs | 10 |
-| Discount Factor | 0.99 |
-| GAE Lambda | 0.95 |
-| Network | [64, 64] |
-
----
-
-## 🔬 Experiments
-
-Three independent PPO models were trained to investigate the impact of different reward functions.
-
-### 01 — Original PPO
-
-The baseline agent learns using the built-in Lunar Lander reward function.
-
+- Algorithm: PPO
 - Training timesteps: 1,000,000
-- Reward function: Environment default
-- Objective: Achieve safe autonomous landing.
+- Policy: MlpPolicy
+- Learning rate: 0.0003
+- Gamma: 0.99
 
-### 02 — Reward Hacking
+This experiment establishes the baseline performance for subsequent comparisons.
 
-A custom reward bonus was introduced:
+### Experiment 2 — Reward Hacking
+
+A custom reward wrapper was introduced to investigate whether the agent could exploit a reward signal instead of prioritizing the intended landing objective.
+
+The wrapper provides an additional reward when the lander maintains low angular and linear velocities:
 
 ```python
-if (
-    abs(angle) < 0.1
-    and abs(x_velocity) < 0.1
-    and abs(y_velocity) < 0.1
-):
-    reward += 1.0
+if abs(angle) < 0.1 and abs(x_velocity) < 0.1 and abs(y_velocity) < 0.1:
+    reward += 1
 ```
 
-The intention was to encourage stable rocket behaviour.
+The experiment produced behavior consistent with prolonged hovering or remaining within the rewarded stability conditions.
 
-However, this reward can encourage the agent to remain in a stable state for longer rather than complete the landing task.
+This demonstrates an important reinforcement learning challenge: **maximizing the designed reward does not always mean achieving the intended objective.**
 
-- Training timesteps: 500,000
-- Additional reward: +1 for satisfying stability conditions
-- Objective: Investigate unintended reward optimization.
+### Experiment 3 — Improved Reward Shaping
 
-### 03 — Improved Reward Shaping
-
-A stability-improvement reward was introduced:
+An improved reward function was introduced to encourage progress toward a more stable state.
 
 ```python
+stability = abs(angle) + abs(x_velocity) + abs(y_velocity)
+
 improvement = previous_stability - stability
 
 reward += 0.5 * improvement
 reward -= 0.01
 ```
 
-This experiment rewards improvements in stability and introduces a small time penalty.
+The reward is based on improvement in stability, with a small per-step penalty.
 
-- Training timesteps: 500,000
-- Reward: Stability improvement
-- Additional penalty: -0.01 per frame
-- Objective: Investigate whether progress-based rewards improve landing behaviour.
+The objective was to encourage meaningful progress rather than simply rewarding the maintenance of a particular state.
 
----
+## 📊 Experimental Results
 
-## 📊 Performance Dashboard
+All three trained models were evaluated on the original, unmodified LunarLander environment over 10 episodes.
 
-All models were evaluated using the original Lunar Lander environment, without their custom reward wrappers.
+| Model | Training Steps | Average Reward | Average Steps | Successful Episodes |
+|---|---:|---:|---:|---:|
+| Baseline PPO | 1M | **151.49** | 443.10 | 6/10 |
+| Reward Hacking PPO | 500K | 2.70 | 980.50 | Not recorded |
+| Improved Reward PPO | 500K | 27.48 | 396.10 | 2/10 |
 
-### Model Comparison
+*Success criterion: Episode reward ≥ 200.*
 
-| Model | Average Reward | Average Steps | Success Rate |
-|:---|---:|---:|---:|
-| Original PPO | **151.49** | 443.10 | 60% |
-| Reward Hacking PPO | 2.70 | 980.50 | Not recorded |
-| Improved Reward PPO | 27.48 | 396.10 | 20% |
+### 📈 Model Performance Comparison
 
-<p align="center">
-  <img src="results/model_comparison.png" alt="PPO Model Comparison" width="90%" />
-</p>
+![Model Comparison](results/model_comparison.png)
 
-<details>
-<summary><b>📈 Detailed Experimental Findings</b></summary>
+### Key Observations
 
-**Original PPO**
-- Average reward: 151.49
-- Successful episodes: 6/10
-- Best-performing model across the reported evaluations.
+- **Baseline PPO:** Achieved the highest average reward and six successful episodes.
+- **Reward Hacking PPO:** Achieved a low average reward and an average episode length close to the 1,000-step limit.
+- **Improved Reward PPO:** Showed a different learning behavior but did not outperform the baseline in this evaluation.
 
-**Reward Hacking PPO**
-- Average original reward: 2.70
-- Nine out of ten episodes reached the 1,000-step time limit.
-- Demonstrated behaviour consistent with prolonged reward-seeking rather than reliable task completion.
+These results highlight how reward design can significantly influence agent behavior and task performance.
 
-**Improved Reward PPO**
-- Average original reward: 27.48
-- Successful episodes: 2/10
-- The experimental stability-based reward did not outperform the original PPO baseline.
+## 🎥 Agent Demonstrations
 
-Success is defined as an original environment episode reward of at least 200.
+Watch the trained agents in action through the recorded simulation episodes.
 
-</details>
+| Experiment | Video |
+|---|---|
+| Baseline PPO | [View Recording](videos/original_ppo/original_ppo-episode-0.mp4) |
+| Reward Hacking PPO | [View Recording](videos/reward_hacking/reward_hacking-episode-0.mp4) |
+| Improved Reward PPO | [View Recording](videos/improved_reward/improved_reward-episode-0.mp4) |
 
----
+*Note: These are individual demonstration episodes. Their rewards are not the same as the 10-episode average evaluation results.*
 
-## 🎥 Simulation Gallery
-
-Three autonomous agent demonstrations were recorded using Gymnasium's `RecordVideo` wrapper.
-
-| Experiment | Recording |
-|:---|:---|
-| Original PPO | [▶ View Simulation](videos/original_ppo/) |
-| Reward Hacking PPO | [▶ View Simulation](videos/reward_hacking/) |
-| Improved Reward PPO | [▶ View Simulation](videos/improved_reward/) |
-
-*Open the respective folders to access the MP4 recordings.*
-
----
-
-## 🛠️ Tech Stack
-
-<p>
-  <img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white" />
-  <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=flat-square&logo=pytorch&logoColor=white" />
-  <img src="https://img.shields.io/badge/Gymnasium-000000?style=flat-square" />
-  <img src="https://img.shields.io/badge/Stable--Baselines3-2C3E50?style=flat-square" />
-  <img src="https://img.shields.io/badge/NumPy-013243?style=flat-square&logo=numpy&logoColor=white" />
-  <img src="https://img.shields.io/badge/Matplotlib-11557C?style=flat-square" />
-  <img src="https://img.shields.io/badge/TensorBoard-FF6F00?style=flat-square" />
-</p>
-
----
-
-## 📁 Repository Structure
+## 🏗️ Project Architecture
 
 ```text
-AI-Rocket-Landing-RL/
+AI-Rocket-Landing-Reinforcement-Learning/
 │
 ├── environment/
 │   └── test_environment.py
@@ -247,7 +148,6 @@ AI-Rocket-Landing-RL/
 │   ├── train_ppo.py
 │   ├── evaluate_agent.py
 │   ├── reward_shaping.py
-│   ├── test_rewards.py
 │   ├── train_reward_hacking.py
 │   ├── evaluate_reward_hacking.py
 │   ├── train_improved_reward.py
@@ -256,31 +156,47 @@ AI-Rocket-Landing-RL/
 │   └── record_videos.py
 │
 ├── models/
-├── videos/
-│   ├── original_ppo/
-│   ├── reward_hacking/
-│   └── improved_reward/
+│   ├── ppo_baseline.zip
+│   ├── ppo_lunar_lander.zip
+│   ├── ppo_reward_hacking.zip
+│   └── ppo_improved_reward.zip
 │
 ├── results/
 │   ├── experiment_summary.csv
 │   └── model_comparison.png
 │
-├── logs/
+├── videos/
+│   ├── original_ppo/
+│   ├── reward_hacking/
+│   └── improved_reward/
+│
 ├── requirements.txt
-├── .gitignore
 └── README.md
 ```
 
----
+## 🛠️ Technology Stack
+
+| Technology | Purpose |
+|---|---|
+| Python | Core programming language |
+| Gymnasium | Reinforcement learning environment |
+| Stable-Baselines3 | PPO implementation |
+| PyTorch | Deep learning framework |
+| NumPy | Numerical computations |
+| Matplotlib | Performance visualization |
+| Pandas | Experiment result analysis |
+| MoviePy | Video processing |
 
 ## 🚀 Getting Started
 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/vxhll/AI-Rocket-Landing-RL.git
+git clone https://github.com/vxhll/AI-Rocket-Landing-Reinforcement-Learning.git
+```
 
-cd AI-Rocket-Landing-RL
+```bash
+cd AI-Rocket-Landing-Reinforcement-Learning
 ```
 
 ### 2. Create a virtual environment
@@ -291,7 +207,7 @@ python -m venv venv
 
 ### 3. Activate the environment
 
-**Windows**
+Windows:
 
 ```bash
 venv\Scripts\activate
@@ -303,7 +219,7 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 5. Train the original PPO agent
+### 5. Train the baseline agent
 
 ```bash
 python src/train_ppo.py
@@ -315,63 +231,49 @@ python src/train_ppo.py
 python src/evaluate_agent.py
 ```
 
-### 7. Run reward experiments
+Explore the other training and evaluation scripts in `src/` to reproduce the reward-hacking and improved-reward experiments.
 
-```bash
-python src/train_reward_hacking.py
+## 💡 Key Learning Outcomes
 
-python src/train_improved_reward.py
-```
+Through this project, I explored:
 
-### 8. Generate visualizations
-
-```bash
-python src/plot_results.py
-```
-
----
+- Reinforcement Learning fundamentals.
+- Policy optimization using PPO.
+- Continuous learning through trial and error in a discrete-action environment.
+- Custom reward function implementation.
+- Reward hacking and unintended agent behavior.
+- Model evaluation and experimental comparison.
+- Visualization and video recording of trained agents.
 
 ## 🔭 Future Improvements
 
-- Implement potential-based reward shaping.
-- Experiment with different reward coefficients.
-- Tune PPO hyperparameters.
-- Evaluate multiple random seeds.
-- Compare PPO with A2C and SAC where appropriate.
-- Improve autonomous landing success rate.
-- Investigate reward robustness and unintended agent behaviour.
-
----
-
-## 💡 Key Takeaway
-
-> An AI agent optimizes the reward function we provide, not necessarily the objective we intend.
-
-This project demonstrates why reward design, behavioural evaluation, and validation against the original task are essential in reinforcement learning.
-
-Understanding why an agent fails is as important as understanding why it succeeds.
-
----
+- Increase training timesteps and evaluation episodes.
+- Experiment with alternative reward functions.
+- Improve landing consistency and success rate.
+- Compare PPO with other reinforcement learning algorithms.
+- Introduce more comprehensive statistical evaluation.
+- Explore curriculum learning and environment variations.
 
 ## 👨‍💻 Author
 
 **Vishal J**
 
-AI & Machine Learning Engineer
+AI/ML Engineer | Reinforcement Learning | Computer Vision | NLP
 
 <p>
   <a href="https://github.com/vxhll">
-    <img src="https://img.shields.io/badge/GitHub-vxhll-181717?style=for-the-badge&logo=github" />
+    <img src="https://img.shields.io/badge/GitHub-vxhll-black?logo=github" alt="GitHub">
   </a>
+  
   <a href="https://www.linkedin.com/in/vishal-j-btech">
-    <img src="https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin" />
+    <img src="https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin" alt="LinkedIn">
   </a>
 </p>
 
 ---
 
 <p align="center">
-  <b>Built with Python, Reinforcement Learning & curiosity.</b>
-  <br />
-  ⭐ If you find this project interesting, consider starring the repository.
+  <b>Built with curiosity, experimentation, and Reinforcement Learning.</b>
+  <br>
+  ⭐ If you find this project interesting, consider starring the repository!
 </p>
